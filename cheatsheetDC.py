@@ -144,7 +144,8 @@ class DF_exploracion(pd.DataFrame):
             print("-------------------------------")
             print(titulo)
             print(self[titulo])
-            self.cuanti=self[aux.append(titulo)]
+            aux=aux.append(titulo)
+            self.cuanti=self[aux]
             
 
     def limpiar_aux(self):
