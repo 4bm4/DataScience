@@ -137,12 +137,14 @@ class DF_exploracion(pd.DataFrame):
                 print(f"El valor {valores} no está en la columna" )
             
     def normalizar_col(self, col):
+        aux= list(self.cuanti.columns)
         for columna in col:
             titulo=columna+"_Normalizada"
             self[titulo] = normalize(self[[columna]], axis=0).ravel()
             print("-------------------------------")
             print(titulo)
             print(self[titulo])
+            self.cuanti=self[aux.append(titulo)]
             
 
     def limpiar_aux(self):
