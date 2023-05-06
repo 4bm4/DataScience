@@ -15,6 +15,7 @@ from statsmodels.genmod.generalized_linear_model import GLMResults
 from statsmodels.formula.api import ols,glm
 from imblearn.over_sampling import SMOTE, ADASYN, BorderlineSMOTE
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import normalize
 from sklearn.linear_model import LinearRegression,LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -128,6 +129,21 @@ class DF_exploracion(pd.DataFrame):
         self.cate=self[lista]   
 
 
+    def quita_valor(self,col,valor):
+        for valores in valor:
+            if valores in self[col].values:
+                self[col].loc[self[col] == valores] = None
+            else:
+                print(f"El valor {valores} no está en la columna" )
+            
+    def normalizar_col(self, col):
+        for columna in col:
+            titulo=columna+"_Normalizada"
+            self[titulo] = normalize(self[[columna]], axis=0).ravel()
+            print("-------------------------------")
+            print(titulo)
+            print(self[titulo])
+            
 
     def limpiar_aux(self):
         
@@ -207,7 +223,6 @@ class DF_exploracion(pd.DataFrame):
 
 
         aux1=self.dico.columns
-        aux2=self.cate.columns
         aux=self.cuanti.columns
 
         # df_auxiliar = self.groupby('sexo').apply(lambda x: pd.Series(shapiro(x), index=['W','P'])).reset_index()
@@ -440,8 +455,27 @@ class DF_exploracion(pd.DataFrame):
 
         
         print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
+    
+    
+    def plot_bigotes_selec_grupos(self,col, grupos):
 
-
+        for a in grupos:
+            self.boxplot(column=col, by=a,figsize=(12, 8))
+            plt.tight_layout() 
+            plt.show()
+        
+    
+    
+    def plot_bigotes_selec(self,col):
+        titulo="Comparación entre: "
+        titulo_aux=""
+        for columnas in col: 
+            titulo_aux=titulo_aux+ "  "+ columnas
+        titulo=titulo+titulo_aux
+        aux=self.cuanti
+        aux[col].plot(kind='box', title=titulo,figsize=(12, 8))
+        plt.show()
+    
 
     def plot_corr(self):
 
