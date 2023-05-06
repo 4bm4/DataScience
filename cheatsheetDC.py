@@ -86,7 +86,9 @@ class DF_exploracion(pd.DataFrame):
 
             elif ((len(self[i].dropna().unique())>10) and  (nulos<=self.porcentaje_nulos_permitido)):
                 tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: CUANTITATIVA"
+                otra=self.normalizar_col(i)
                 cuantis.append(i)
+                cuantis.append(otra)
 
             elif ( (len(self[i].dropna().unique())<2) or (nulos>self.porcentaje_nulos_permitido)):
                 tipo_de_var=f"SOLO {len(self[i].dropna().unique())} TIPOS, NO VALE LA COLUMNA"
@@ -101,7 +103,7 @@ class DF_exploracion(pd.DataFrame):
         print("|----------------------------------------------------------------------------------------------------")
 
         
-
+        self.normalizar_col(cuantis)
 
         self.DF_cuantis(cuantis)
         self.DF_cualis(categori+dico)
@@ -138,16 +140,10 @@ class DF_exploracion(pd.DataFrame):
 
 
     def normalizar_col(self, col):
-        aux= list(self.cuanti.columns)
         for columna in col:
             titulo=columna+"_Normalizada"
             self[titulo] = normalize(self[[columna]], axis=0).ravel()
-            print("-------------------------------")
-            print(titulo)
-            print(self[titulo])
-            aux=aux.append(titulo)
-            self.DF_cuantis(aux)
-            
+        return titulo    
 
 
     def limpiar_aux(self):
