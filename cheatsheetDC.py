@@ -135,7 +135,8 @@ class DF_exploracion(pd.DataFrame):
                 self[col].loc[self[col] == valores] = None
             else:
                 print(f"El valor {valores} no está en la columna" )
-            
+
+
     def normalizar_col(self, col):
         aux= list(self.cuanti.columns)
         for columna in col:
@@ -145,8 +146,9 @@ class DF_exploracion(pd.DataFrame):
             print(titulo)
             print(self[titulo])
             aux=aux.append(titulo)
-            self.cuanti=self[aux]
+            self.DF_cuantis(aux)
             
+
 
     def limpiar_aux(self):
         
