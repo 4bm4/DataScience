@@ -52,7 +52,7 @@ class DF_exploracion(pd.DataFrame):
         self.discreta=[]
         self.stingg=[]
         self.outliers_hecho=True
-        self.porcentaje_nulos_permitido=0.3
+        self.porcentaje_nulos_permitido=0.65
 
     def variables(self):
 
@@ -142,7 +142,9 @@ class DF_exploracion(pd.DataFrame):
     def normalizar_col(self, col):
         for columna in col:
             titulo=columna+"_Normalizada"
-            self[titulo] = normalize(self[[columna]], axis=0).ravel()
+            # valor_mas_frecuente = self[[columna]].mode()[0]
+            media=self[[columna]].mean()
+            self[titulo] = normalize(self[[columna]].fillna(media), axis=0).ravel()
         return titulo    
 
 
