@@ -46,6 +46,7 @@ class DF_exploracion(pd.DataFrame):
         self.predicotres=pd.DataFrame
         self.outcome=pd.DataFrame
         # self.outcome_col=self.outcome.columns
+        self.todas=[]
         self.normal_cuatis=[]
         self.normal_grupos_dico=[]
         self.normal_grupos_cate=[]
@@ -60,54 +61,59 @@ class DF_exploracion(pd.DataFrame):
         cuantis=[]
         categori=[]
         eliminar=[]
+        todas=[]
         
 
         for i in self.columns: 
+            if i in list(self.todas.columns):
+                print(f" ** {i} ya esta en la lista **")
+                todas.append(i)
 
-            try:
-                datos=self[i].dropna().to_numpy()
-                discreta=True
-                for j in datos:
-                    if (j%1 !=0):
-                        discreta=False
-                        break
-                    else:
-                        continue
-                if (discreta):
-                    self.discreta.append(i)
-            except:
-                self.stingg.append(i)
-
-            nulos= (self[i].isnull().sum())/len(self[i])
-            
-            if ((len(self[i].dropna().unique())==2) and (nulos<=self.porcentaje_nulos_permitido)):
-                tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: DICOTOMICA"
-                dico.append(i)
-
-            elif ((len(self[i].dropna().unique())>10) and  (nulos<=self.porcentaje_nulos_permitido)):
-                tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: CUANTITATIVA"
-                cuantis.append(i)
-                try:
-                    otra=self.normalizar_col([i])
-                    cuantis.append(otra)
-                except:
-                    print(f"Error al normalizar {i}")
-
-            elif ( (len(self[i].dropna().unique())<2) or (nulos>self.porcentaje_nulos_permitido)):
-                tipo_de_var=f"SOLO {len(self[i].dropna().unique())} TIPOS, NO VALE LA COLUMNA"
-                eliminar.append(i)
             else:
-                tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: CATEGORICA/CUANTI"
-                categori.append(i)
+                try:
+                    datos=self[i].dropna().to_numpy()
+                    discreta=True
+                    for j in datos:
+                        if (j%1 !=0):
+                            discreta=False
+                            break
+                        else:
+                            continue
+                    if (discreta):
+                        self.discreta.append(i)
+                except:
+                    self.stingg.append(i)
 
-            print (f"|  {i} \n|   - Tipo de dato: {self[i].dtype} \n|   - Valores repetidos: {tipo_de_var} \n|   - Nulos: {nulos} \n| ")
+                nulos= (self[i].isnull().sum())/len(self[i])
+                
+                if ((len(self[i].dropna().unique())==2) and (nulos<=self.porcentaje_nulos_permitido)):
+                    tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: DICOTOMICA"
+                    dico.append(i)
+
+                elif ((len(self[i].dropna().unique())>10) and  (nulos<=self.porcentaje_nulos_permitido)):
+                    tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: CUANTITATIVA"
+                    cuantis.append(i)
+                    try:
+                        otra=self.normalizar_col([i])
+                        cuantis.append(otra)
+                    except:
+                        print(f"Error al normalizar {i}")
+
+                elif ( (len(self[i].dropna().unique())<2) or (nulos>self.porcentaje_nulos_permitido)):
+                    tipo_de_var=f"SOLO {len(self[i].dropna().unique())} TIPOS, NO VALE LA COLUMNA"
+                    eliminar.append(i)
+                else:
+                    tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: CATEGORICA/CUANTI"
+                    categori.append(i)
+
+                print (f"|  {i} \n|   - Tipo de dato: {self[i].dtype} \n|   - Valores repetidos: {tipo_de_var} \n|   - Nulos: {nulos} \n| ")
 
         print (f"|----------------------------------------------------------------------------------------------------\n|  TODAS: {self.columns} \n|  DICOTOMICAS: {dico} \n|  CATEGORICAS: {categori} \n|  CUANTITATIVAS: {cuantis} \n|  ELIMINAR: {eliminar}")
         print("|----------------------------------------------------------------------------------------------------")
 
         
-        self.normalizar_col(cuantis)
-
+        # self.normalizar_col(cuantis)
+        self.todas=self[todas]
         self.DF_cuantis(cuantis)
         self.DF_cualis(categori+dico)
         self.DF_dicotomica(dico)
