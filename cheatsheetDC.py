@@ -151,9 +151,9 @@ class DF_exploracion(pd.DataFrame):
     def normalizar_col(self, col):
         for columna in col:
             titulo=columna+"_Normalizada"
-            valor_mas_frecuente = self[[columna]].mode()[0]
-            #media=self[[columna]].mean()
-            self[titulo] = normalize(self[[columna]].fillna(valor_mas_frecuente), axis=0).ravel()
+            #valor_mas_frecuente = self[[columna]].mode()[0]
+            media=self[[columna]].mean()
+            self[titulo] = normalize(self[[columna]].fillna(media), axis=0).ravel()
         return titulo    
 
 
