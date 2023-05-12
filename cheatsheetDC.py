@@ -65,7 +65,7 @@ class DF_exploracion(pd.DataFrame):
         
 
         for i in self.columns: 
-            if i in list(self.todas.columns):
+            if i in self.todas:
                 print(f" ** {i} ya esta en la lista **")
                 todas.append(i)
 
@@ -112,8 +112,8 @@ class DF_exploracion(pd.DataFrame):
         print("|----------------------------------------------------------------------------------------------------")
 
         
-        # self.normalizar_col(cuantis)
-        self.todas=self[todas]
+        # self.normalizar_ol(cuantis)
+        self.todas=todas
         self.DF_cuantis(cuantis)
         self.DF_cualis(categori+dico)
         self.DF_dicotomica(dico)
