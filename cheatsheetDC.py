@@ -86,9 +86,12 @@ class DF_exploracion(pd.DataFrame):
 
             elif ((len(self[i].dropna().unique())>10) and  (nulos<=self.porcentaje_nulos_permitido)):
                 tipo_de_var=f"{len(self[i].dropna().unique())} tipos, posiblemente: CUANTITATIVA"
-                otra=self.normalizar_col([i])
                 cuantis.append(i)
-                cuantis.append(otra)
+                try:
+                    otra=self.normalizar_col([i])
+                    cuantis.append(otra)
+                except:
+                    print(f"Error al normalizar {i}")
 
             elif ( (len(self[i].dropna().unique())<2) or (nulos>self.porcentaje_nulos_permitido)):
                 tipo_de_var=f"SOLO {len(self[i].dropna().unique())} TIPOS, NO VALE LA COLUMNA"
